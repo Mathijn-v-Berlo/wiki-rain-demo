@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      html, body {
+	  height: 300vh;
+	  margin: 0;
+	  transition: background 0.2s linear;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      window.addEventListener("scroll", () => {
+	  const hue = (window.scrollY / window.innerHeight) * 360;
+	  document.body.style.background = `linear-gradient(180deg, hsl(${hue}, 80%, 50%), hsl(${(hue+60)%360}, 80%, 40%))`;
+      });
+    </script>
+  </body>
+</html>

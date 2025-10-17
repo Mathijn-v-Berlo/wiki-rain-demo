@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floating Dots Parallax</title>
+    <style>
+      html, body {
+	  margin: 0; height: 200vh; /* extra height for scrolling */
+	  background: radial-gradient(circle at center, #111, #000);
+	  overflow-x: hidden;
+      }
+      canvas {
+	  position: fixed; top: 0; left: 0;
+	  width: 100vw; height: 100vh;
+	  pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="dots"></canvas>
+
+    <script>
+      const c = document.getElementById("dots");
+      const ctx = c.getContext("2d");
+      let dots = [], w, h;
+
+      function resize() {
+	  w = c.width = innerWidth;
+	  h = c.height = innerHeight;
+	  dots = Array.from({ length: 80 }, () => ({
+	      x: Math.random() * w,
+	      y: Math.random() * h,
+	      r: 2 + Math.random() * 4,
+	      dx: (Math.random() - 0.5) * 0.5,
+	      dy: (Math.random() - 0.5) * 0.5,
+	      color: `hsl(${Math.random()*360},100%,70%)`
+	  }));
+      }
+      resize();
+      addEventListener("resize", resize);
+
+      let scrollY = 0;
+      addEventListener("scroll", () => scrollY = scrollY = window.scrollY);
+
+      function draw() {
+	  ctx.clearRect(0,0,w,h);
+	  for (let d of dots) {
+	      d.x += d.dx + scrollY * 0.0002;
+	      d.y += d.dy + scrollY * 0.0001;
+	      if (d.x < 0) d.x = w; if (d.x > w) d.x = 0;
+	      if (d.y < 0) d.y = h; if (d.y > h) d.y = 0;
+	      ctx.beginPath();
+	      ctx.arc(d.x, d.y, d.r, 0, Math.PI*2);
+	      ctx.fillStyle = d.color;
+	      ctx.fill();
+	  }
+	  requestAnimationFrame(draw);
+      }
+      draw();
+    </script>
+  </body>
+</html>

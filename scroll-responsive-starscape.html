@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      html, body {
+	  margin: 0;
+	  height: 200vh;
+	  background: black;
+      }
+      canvas {
+	  position: fixed;
+	  top: 0; left: 0;
+	  width: 100%; height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="stars"></canvas>
+    <script>
+      const c = document.getElementById("stars");
+      const ctx = c.getContext("2d");
+      let stars = [], w, h;
+
+      function resize() {
+	  w = c.width = innerWidth;
+	  h = c.height = innerHeight;
+	  stars = Array.from({ length: 150 }, () => ({
+	      x: Math.random() * w,
+	      y: Math.random() * h,
+	      r: Math.random() * 2,
+	      speed: Math.random() * 0.2
+	  }));
+      }
+      resize();
+      addEventListener("resize", resize);
+
+      function draw() {
+	  const scroll = window.scrollY / window.innerHeight;
+	  ctx.clearRect(0,0,w,h);
+	  ctx.fillStyle = "white";
+	  for (let s of stars) {
+	      s.y += s.speed + scroll * 0.5;
+	      if (s.y > h) s.y = 0;
+	      ctx.globalAlpha = 0.5 + Math.sin(Date.now()/200 + s.x)*0.5;
+	      ctx.beginPath();
+	      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+	      ctx.fill();
+	  }
+	  requestAnimationFrame(draw);
+      }
+      draw();
+    </script>
+  </body>
+</html>
